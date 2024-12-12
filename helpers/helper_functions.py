@@ -1,6 +1,8 @@
 
 # This function was taken from Lecture 4 of DSCI 571
 # Link: https://pages.github.ubc.ca/mds-2024-25/DSCI_571_sup-learn-1_students/lectures/notes/04_preprocessing-pipelines-column-transformer.html
+from sklearn.model_selection import cross_validate
+
 def mean_std_cross_val_scores(model, X_train, y_train, **kwargs):
     """
     Returns mean and std of cross validation
