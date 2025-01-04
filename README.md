@@ -90,10 +90,11 @@ A variety of regression models were trained and evaluated:
     conda env create -f environment.yml
     conda activate nyc_airbnb_env
     ```
-2. Enter the root project direcory on your local repository and run:  
+3. Enter the root project direcory on your local repository and run:  
    ```
    make quarto
    ```
+
 
 # License
 This project was created with the [`MIT License`](LICENSE.md)
