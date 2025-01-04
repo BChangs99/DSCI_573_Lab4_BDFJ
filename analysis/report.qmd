@@ -25,6 +25,8 @@ jupyter: python3
 
 This project aims to predict Airbnb listing popularity in New York City by modeling the number of monthly reviews (reviews_per_month) each listing receives. We hypothesize that features such as geographic location, host activities, and property attributes, together with additional engineered features like review timing and text sentiment, will help explain variation in listing popularity. To achieve our goal, we compare multiple regression models—Ridge, Random Forest, LightGBM, and Elastic Net—seeking a balance between accuracy, interpretability, and computational efficiency.
 
+Our best model ($R^2 = 0.693$ on the test set) was LightGBM (LGBM), demonstrating a strong ability to capture data patterns and generalize well, particularly when enhanced by feature engineering and hyperparameter tuning.
+
 ::: {.alert .alert-info}
 ## INTRODUCTION
 :::
@@ -308,9 +310,15 @@ In terms of MAE (Mean Absolute Error), Elastic Net and RidgeCV also show minimal
 Elastic Net has a slight computational advantage over RidgeCV. It has a fit time of 0.505 (+/- 0.067), compared to RidgeCV's 0.685 (+/- 0.039). The score time for Elastic Net is also marginally lower at 0.008 (+/- 0.002), compared to RidgeCV's 0.009 (+/- 0.001). This makes Elastic Net slightly more efficient, especially for large-scale applications requiring faster model training.
 
 ```{python}
-lgbm_pipe =  make_lgbm_pipeline(X_train, y_train, preprocessor, results, scoring_metric)
-rf_pipe =  make_rf_pipeline(X_train, y_train, preprocessor, results, scoring_metric)
-elastic_pipe = make_elastic_pipeline(X_train, y_train, preprocessor, results, scoring_metric)
+lgbm_pipe =  make_lgbm_pipeline(X_train, y_train, preprocessor, 
+    results, scoring_metric
+)
+rf_pipe =  make_rf_pipeline(X_train, y_train, preprocessor, 
+    results, scoring_metric
+)
+elastic_pipe = make_elastic_pipeline(X_train, y_train, preprocessor, 
+    results, scoring_metric
+)
 pd.DataFrame(results).T
 ```
 
@@ -346,7 +354,8 @@ rfe_ridge_preprocessor = make_column_transformer(
 
 # # Get the cv scores
 # results['rfe_ridgecv'] = mean_std_cross_val_scores(
-#     pipe_rfe_ridgecv, X_train, y_train, return_train_score=True, scoring=scoring_metric
+#     pipe_rfe_ridgecv, X_train, y_train, 
+#     return_train_score=True, scoring=scoring_metric
 # )
 
 # pd.DataFrame(results).T
