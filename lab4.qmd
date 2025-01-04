@@ -1,5 +1,19 @@
 ---
 title: 'Lab 4: Putting it all together in a mini project'
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    embed-resources: true
+    fig-numbering: true
+    tbl-numbering: true
+  pdf:
+    toc: true
+    toc-depth: 2
+    fig-numbering: true
+    tbl-numbering: true
+embed-resources: true
+editor: source
 jupyter: python3
 ---
 
