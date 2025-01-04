@@ -66,17 +66,16 @@ A variety of regression models were trained and evaluated:
 ```plaintext
 .
 ├── data/
-│   ├── raw/               # Raw CSV or downloaded data
-│   └── processed/         # Processed data (if needed)
-├── notebooks/
-│   └── analysis.ipynb     # Main exploratory and modeling notebook
-├── models/
-│   ├── lgbm_random.pickle # Example saved model objects
-│   └── ...
+│   └── raw/               # Raw CSV or downloaded data
+├── analysis/
+│   └── report.ipynb     # Main exploratory and modeling notebook
 ├── results/
-│   └── optimized_results.csv # Summary of hyperparameter tuning scores
-├── helpers/
-│   └── helper_functions.py   # Utility functions
+|   ├── figures/
+│   ├── models/lgbm_random.pickle # Example saved model objects
+│   └── tables/optimized_results.csv # Summary of hyperparameter tuning scores
+├── src/
+│   |── eda.py   # Utility functions
+|   |── ...
 ├── environment.yml           # Conda environment specification
 ├── LICENSE                   # License file
 └── README.md                 # This file
