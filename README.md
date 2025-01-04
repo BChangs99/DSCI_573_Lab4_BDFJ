@@ -79,7 +79,7 @@ A variety of regression models were trained and evaluated:
 ├── environment.yml           # Conda environment specification
 ├── LICENSE                   # License file
 └── README.md                 # This file
-
+```
 
 # Usage
 ## Running the analysis
