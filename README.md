@@ -1,6 +1,6 @@
 # NYC Airbnb 2019: End-to-End Regression Project
 
-**Authors**: Yu Yuan (Brian) Chang, Farhan Bin Faisal, Daria Khon, Adrian Leung, Zhiwei Zhang
+**Authors**: Yu Yuan (Brian) Chang, Farhan Bin Faisal, Daria Khon
 
 ---
 

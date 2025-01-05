@@ -12,6 +12,8 @@ format:
     toc-depth: 2
     fig-numbering: true
     tbl-numbering: true
+author:
+    - Brian Chang
 embed-resources: true
 editor: source
 jupyter: python3
@@ -20,7 +22,7 @@ jupyter: python3
 
 
 ::: {.alert .alert-info}
-## ABSTRACT
+## Abstract
 :::
 
 This project aims to predict Airbnb listing popularity in New York City by modeling the number of monthly reviews (reviews_per_month) each listing receives. We hypothesize that features such as geographic location, host activities, and property attributes, together with additional engineered features like review timing and text sentiment, will help explain variation in listing popularity. To achieve our goal, we compare multiple regression models—Ridge, Random Forest, LightGBM, and Elastic Net—seeking a balance between accuracy, interpretability, and computational efficiency.
@@ -28,18 +30,18 @@ This project aims to predict Airbnb listing popularity in New York City by model
 Our best model ($R^2 = 0.693$ on the test set) was LightGBM (LGBM), demonstrating a strong ability to capture data patterns and generalize well, particularly when enhanced by feature engineering and hyperparameter tuning.
 
 ::: {.alert .alert-info}
-## INTRODUCTION
+## Introduction
 :::
 
 
 ::: {.alert .alert-warning}
-### Problem Statement  
+### Problem Statement 
 :::
 
 The central objective of this project is to forecast the popularity of Airbnb listings in New York City, represented by the number of reviews a listing receives per month. We interpret higher review counts as a proxy for greater popularity or demand, enabling us to understand how various factors—location, listing attributes, host behavior, and time of year—might drive a listing’s success. Ultimately, this predictive model can inform Airbnb hosts about strategic ways to optimize their listings and appeal to prospective renters.
 
 ::: {.alert .alert-warning}
-### Data  
+### Data
 :::
 The data contains 9 explanatory features and one target feature `reviews_per_month`, which will be used as a metric for a listing's popularity. Some observations for `reviews_per_month` were missing; however, this is because they were linked to `number_of_reviews` having values of 0 and therefore can be imputed.
 
@@ -68,7 +70,7 @@ By experimenting with these models, we aim to identify the best balance of predi
 
 ```{python}
 #| echo: false
-
+#| output: false
 # Run command for helper functions
 %run -i ../src/pipeline_maker.py
 %run -i ../src/evaluate.py
@@ -98,7 +100,7 @@ from IPython.display import Image, display
 ```
 
 ::: {.alert .alert-info}
-## METHODS 
+## Methods 
 :::
 
 We begin with exploratory data analysis (EDA) to gain a clearer understanding of the dataset and identify potential trends or anomalies. Next, we perform any necessary feature engineering before handling missing values and preparing our data (e.g., encoding categorical variables and scaling numeric features).  
@@ -173,7 +175,7 @@ display(Image(filename='../results/figures/corr.png'))
 ### Feature Engineering  
 :::
 
-**We wil introduce two new features:**
+**We will introduce two new features:**
 1. Vader sentiment analysis on the name of the listings. 
     - Motivation: listings with positive or engaging titles may attract more guests, and hence more reviews, while negative sentiments might deter potential renters.
 2. Month of the listing from `last_review`. 
@@ -186,7 +188,7 @@ train_df, test_df = add_month_of_last_review(train_df, test_df)
 ```
 
 ::: {.alert .alert-warning}
-### Preprocessing and transformations  
+### Preprocessing and Transformations  
 :::
 
 ```{python}
@@ -240,7 +242,7 @@ preprocessor.fit(X_train)
 ```
 
 ::: {.alert .alert-warning}
-### Baseline model  
+### Baseline Model  
 :::
 
 ```{python}
@@ -262,7 +264,7 @@ pd.DataFrame(results).T
 The dummy model shows poor performance, as expected, indicating that predicting the average value of the target variable `reviews_per_month` (1.09) for all observations does not capture the complexity of the problem.
 
 ::: {.alert .alert-warning}
-###  Linear model  
+###  Linear Model  
 ::: 
 
 We will start by exploring the Ridge model. To optimize its performance, we will use RidgeCV, which automatically tunes the regularization hyperparameter (alpha) using cross-validation. This process allows us to dynamically identify the best alpha within overall cross-validation. See cross validation results below.<br>
@@ -323,7 +325,7 @@ pd.DataFrame(results).T
 ```
 
 ::: {.alert .alert-warning}
-###  Feature selection  
+###  Feature Selection  
 ::: 
 
 Here, we test out our neighbourhood categorical feature followed by feature selection using RFE CV. 
@@ -346,19 +348,19 @@ rfe_ridge_preprocessor = make_column_transformer(
 ```{python}
 #| tags: []
 # Make the rfecv pipeline
-# pipe_rfe_ridgecv = make_pipeline(
-#     rfe_ridge_preprocessor,
-#     RFECV(Ridge(), cv=10, n_jobs=-1), 
-#     RidgeCV()
-# )
+pipe_rfe_ridgecv = make_pipeline(
+    rfe_ridge_preprocessor,
+    RFECV(Ridge(), cv=10, n_jobs=-1), 
+    RidgeCV()
+)
 
-# # Get the cv scores
-# results['rfe_ridgecv'] = mean_std_cross_val_scores(
-#     pipe_rfe_ridgecv, X_train, y_train, 
-#     return_train_score=True, scoring=scoring_metric
-# )
+# Get the cv scores
+results['rfe_ridgecv'] = mean_std_cross_val_scores(
+    pipe_rfe_ridgecv, X_train, y_train, 
+    return_train_score=True, scoring=scoring_metric
+)
 
-# pd.DataFrame(results).T
+pd.DataFrame(results).T
 ```
 
 We observed that adding the neighborhood feature followed by feature selection slightly improved the performance of RidgeCV, as evidenced by the higher R² scores. However, the increased fit times indicate significant computational demands, which, in our opinion, do not justify the marginal improvement.
@@ -366,7 +368,7 @@ We observed that adding the neighborhood feature followed by feature selection s
 While we believe that incorporating the neighborhood feature followed by Recursive Feature Elimination (RFE) could marginally enhance the performance of other models as well, we opted not to pursue this approach for this project. The high fit times render it impractical and infeasible given the scope and computational constraints.
 
 ::: {.alert .alert-warning}
-###  Hyperparameter optimization  
+###  Hyperparameter Optimization  
 ::: 
 
 We performed hyperparameter optimization on Ridge, LGBTM, Random Forest and Elastic Net models using RandomizesSearchCV method of sklearn. Below is the summary of results:
@@ -407,33 +409,37 @@ param_grid_elastic = {
 
 ```{python}
 #| tags: []
+#| echo: false
 random_ridge_search = run_ridge_random_search(X_train, y_train, preprocessor,
-    param_dist_ridge, scoring_metric='r2', n_iter=1,
+    param_dist_ridge, scoring_metric='r2', n_iter=5,
     refit_metric='R2', random_state=573, opti_results=opti_results
 )
 ```
 
 ```{python}
 #| tags: []
+#| echo: false
 random_lgbm_search = run_lgbm_random_search(X_train, y_train, 
     preprocessor, param_grid_lgbm, 
-    scoring_metric='r2', n_iter=1, refit_metric='R2', 
+    scoring_metric='r2', n_iter=5, refit_metric='R2', 
     random_state=573, opti_results=opti_results
 )
 ```
 
 ```{python}
+#| echo: false
 random_rf_search = run_rf_random_search(X_train, y_train, 
     preprocessor, param_grid_rf, 
-    scoring_metric='r2', n_iter=1, refit_metric='R2', 
+    scoring_metric='r2', n_iter=5, refit_metric='R2', 
     random_state=573, opti_results=opti_results
 )
 ```
 
 ```{python}
+#| echo: false
 random_en_search = run_elastic_net_random_search(X_train, y_train, 
     preprocessor, param_grid_elastic,
-    scoring_metric='r2', n_iter=1, refit_metric='R2',
+    scoring_metric='r2', n_iter=5, refit_metric='R2',
     random_state=573, cv=5, opti_results=opti_results
 )
 ```
@@ -493,11 +499,11 @@ get_permutation_importance(random_lgbm_search.best_estimator_)
 ```
 
 ::: {.alert .alert-info}
-## RESULTS 
+## Results 
 :::
 
 ::: {.alert .alert-warning}
-###  Performance of Best Model (optimized LGBM) on Test Set 
+###  Performance of Best Model (Optimized LGBM) on Test Set 
 ::: 
 
 ```{python}
@@ -505,7 +511,7 @@ best_pipeline, mse, r2 = evaluate_best_pipeline(random_lgbm_search, X_test, y_te
 ```
 
 ::: {.alert .alert-warning}
-###  Performance of Best Model (optimized LGBM) on CV Set 
+###  Performance of Best Model (Optimized LGBM) on CV Set 
 ::: 
 
 ```{python}
@@ -557,7 +563,7 @@ shap.plots.force(lgbm_explanation[ex_l5_index, :])
 For this prediction (`reviews_per_month` = -0.00), very few features are pushing the model towards a higher prediction. Features such as `number_of_reviews` (-0.5211), `minimum_nights` (-0.04907) and  `month_of_last_review_June` (0) are pushing the model towards a lower prediction value.
 
 ::: {.alert .alert-info}
-## CONCLUSION 
+## Conclusion 
 :::
 
 Overall, out of the four models explored, LGBM demonstrated the best $R^2$

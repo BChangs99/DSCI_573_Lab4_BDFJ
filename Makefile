@@ -4,7 +4,7 @@
 quarto: analysis/report.qmd
 	quarto render analysis/report.qmd --to html
 	quarto render analysis/report.qmd --to pdf
-	cp analysis/* docs/
+	cp analysis/report.html docs/
 	mv docs/report.html docs/index.html
 
 .PHONY: \
