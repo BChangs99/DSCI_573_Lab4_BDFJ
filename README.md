@@ -1,6 +1,6 @@
 # NYC Airbnb 2019: End-to-End Regression Project
 
-**Authors**: Yu Yuan (Brian) Chang, Farhan Bin Faisal, Daria Khon
+**Authors**: Yu Yuan (Brian) Chang, Farhan Bin Faisal, Daria Khon, Jay Mangat
 
 ---
 
@@ -101,5 +101,5 @@ This project was created with the [`MIT License`](LICENSE.md)
 
 # Acknowledgements
 - Dataset: Provided by Kaggle.
-- Contributors: Yu Yuan (Brian) Chang, Farhan Bin Faisal, Daria Khon, Adrian Leung, Zhiwei Zhang.
+- Contributors: Yu Yuan (Brian) Chang, Farhan Bin Faisal, Daria Khon, Jay Mangat.
 - Tools & Libraries: Python 3, pandas, scikit-learn, LightGBM, Altair, etc.
